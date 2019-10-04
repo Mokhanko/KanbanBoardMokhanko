@@ -1,0 +1,29 @@
+/node_modules
+/client/node_modules
+/client/images
+/client/.pnp
+/client/.pnp.js
+
+# testing
+/client/coverage
+
+# production
+/client/build
+
+# misc
+/client/.DS_Store
+/client/.env.local
+/client/.env.development
+/client/.env.test.local
+/client/.env.production
+
+.env
+
+/client/npm-debug.log*
+/client/yarn-debug.log*
+/client/yarn-error.log*
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.idea/
