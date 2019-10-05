@@ -1,6 +1,6 @@
 import { createAction, handleActions } from 'redux-actions';
 import { createSelector  } from 'reselect';
-import img from '../../../images/test.jpg';
+import img from '../../images/test.jpg';
 
 const initialState = {
   createCardModal: false,
@@ -92,13 +92,11 @@ const removeList = (boardLists, listIdToRemove) => {
 };
 
 const cardToList = (boardLists, listId, card) => {
-  console.log('Card to list', boardLists, listId, card);
   const existingCartItem = boardLists.find(
     boardList => boardList.id === listId
   );
 
   if(existingCartItem) {
-    console.log('NICE PROPS BRO');
     return boardLists.map(boardList =>
       boardList.id === listId ? {
           ...boardList,
@@ -150,4 +148,6 @@ export default handleActions({
       ...state,
       [payload.field]: payload.value
   })
-}, initialState);
+},
+  initialState
+);

@@ -15,7 +15,7 @@ import {
   startCreateCard,
   changeCardProps,
   addCard
-} from './reducer';
+} from '../../reducer/List';
 import CreateListWindow from '../../components/CreateListWindow';
 
 const BoardContainer = styled.div`
