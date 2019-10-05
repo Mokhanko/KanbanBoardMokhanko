@@ -3,7 +3,8 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { GlobalStyle } from '../globalStyles';
 import Drawer from '../components/Drawer';
-import BoardContainer from './Board';
+import Board from './Board';
+import Auth from './Authentication';
 
 const MainContainer = styled.div`
   width: 80%;
@@ -16,7 +17,8 @@ const App = () => (
     <GlobalStyle />
     <Drawer />
     <Switch>
-      <Route exact path='/' component={BoardContainer} />
+      <Route exact path='/' component={Board} />
+      <Route exact path='/auth' component={Auth} />
     </Switch>
   </MainContainer>
 );

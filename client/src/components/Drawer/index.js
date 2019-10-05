@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
@@ -78,7 +79,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Header = () => {
+const Header = ({ history }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -109,7 +110,8 @@ const Header = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" noWrap onClick={() => {
+            history.push('/auth')}}>
             Board
           </Typography>
         </Toolbar>
@@ -151,4 +153,4 @@ const Header = () => {
   )
 };
 
-export default Header;
+export default withRouter(Header);

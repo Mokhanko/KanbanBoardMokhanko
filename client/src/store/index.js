@@ -2,8 +2,13 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { fork, all } from 'redux-saga/effects';
 import logger from 'redux-logger';
-import boardReducer from '../pages/Board/reducer';
-import { boardSagas } from '../pages/Board/reducer/sagas';
+import {createBrowserHistory} from 'history';
+import boardReducer from '../reducer/List';
+import userReducer from '../reducer/User';
+import { boardSagas } from '../reducer/List/sagas';
+import { userSaga } from '../reducer/User/sagas'
+
+export const history = new createBrowserHistory();
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -14,12 +19,14 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
 const middlewares = [sagaMiddleware];
 
 const rootReducer = combineReducers({
-  board: boardReducer
+  board: boardReducer,
+  user: userReducer
 });
 
 function* rootSaga(){
   yield all([
     fork(boardSagas),
+    fork(userSaga)
   ])
 }
 
