@@ -7,22 +7,21 @@ const Card = new Schema({
     type: String
   },
   author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  update: {
-    type: Date,
+    type: String
   },
   img: {
     type: String,
     default: null
   },
   description: {
-    type: String
+    type: String,
+    default: ''
   },
   list: {
     type: String
   }
-},{timestamps: true});
+}, {
+  timestamps: true
+});
 
 export default mongoose.model('Card', Card);

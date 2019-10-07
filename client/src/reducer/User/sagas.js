@@ -1,15 +1,14 @@
 import { put, call, fork, all, takeEvery } from 'redux-saga/effects';
 import request from '../../services/axiosMethods';
 import { history } from '../../store';
+import STORAGE from '../../services/localStore';
 import {
   loginUser,
   loadingAuth,
   logOut,
-  userLoggedActions,
   regUser,
   changeCurrUserName,
   changeCurrUserId,
-  changeCurrUserAvatar,
   changePassword,
   changeRePassword,
   changeName,
@@ -19,6 +18,7 @@ import {
 
 function* fetchUserLogin(payload){
   try {
+    console.log('LOGIN start');
     yield put(loadingAuth(true));
     const {data, error} = yield call(request,({
       url:  '/auth/sign_in',
@@ -31,6 +31,9 @@ function* fetchUserLogin(payload){
     if(error){
       console.warn(error);
     }else{
+      console.log('LOGIN SUCCESS',data);
+      STORAGE.set('UserName', data.name);
+      STORAGE.set('UserId', data._id);
       yield put(changeCurrUserName(data.name));
       yield put(changeCurrUserId(data._id));
       history.push('/');
@@ -61,6 +64,8 @@ function* fetchUserRegistration(payload){
     if(error){
       console.warn(error);
     }else{
+      STORAGE.set('UserName', data.name);
+      STORAGE.set('UserId', data._id);
       yield put(changeCurrUserName(data.name));
       yield put(changeCurrUserId(data._id));
       history.push('/');
@@ -76,31 +81,13 @@ function* fetchUserRegistration(payload){
   }
 }
 
-function* fetchIsUserLog(){
-  try{
-    yield put(loadingAuth(true));
-    const {data, error} = yield call(request,({
-      url: '/auth/sign_in',
-      method: 'POST'
-    }));
-    if(error){
-
-    }else{
-      yield put(userLoggedActions(data.name, data._id));
-    }
-  }
-  finally {
-    yield put(loadingAuth(false));
-  }
+function* fetchLogOut(){
+  STORAGE.remove('UserName');
+  STORAGE.remove('UserId');
+  yield put(changeCurrUserName(''));
+  yield put(changeCurrUserId(''));
+  history.push('/auth');
 }
-
-// function* fetchLogOut(){
-//   yield put(logOutActions());
-// }
-//
-// function* watchUserLogged(){
-//   yield takeEvery(isUserLogged, fetchIsUserLog)
-// }
 
 function* watchFetchUser(){
   yield takeEvery(loginUser, fetchUserLogin)
@@ -110,15 +97,14 @@ function* watchFetchRegisterUser(){
   yield takeEvery(regUser, fetchUserRegistration)
 }
 
-// function* watchLogOut(){
-//   yield takeEvery(logOut, fetchLogOut);
-// }
+function* watchLogOut(){
+  yield takeEvery(logOut, fetchLogOut);
+}
 
 export function* userSaga() {
   yield all([
     fork(watchFetchUser),
-    fork(watchFetchRegisterUser)
-    // fork(watchUserLogged),
-    // fork(watchLogOut)
+    fork(watchFetchRegisterUser),
+    fork(watchLogOut)
   ])
 }

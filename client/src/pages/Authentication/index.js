@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose, setDisplayName, withHandlers, setPropTypes, withState, branch, renderComponent } from 'recompose';
+import PropTypes from 'prop-types';
+import { compose, withHandlers, setPropTypes, branch, renderComponent } from 'recompose';
 import {
   changeCheckRePassword,
   changeSurname,
@@ -13,6 +14,7 @@ import {
 } from '../../reducer/User';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
+import Loader from '../../components/Loader';
 
 const Auth = ({
   isInSignIn, user_name, user_surname, user_password, user_rePassword, handleUserInput, check_rePassword, regUser,
@@ -47,7 +49,8 @@ export default compose(connect(
     user_surname: state.user.user_surname,
     user_password: state.user.user_password,
     user_rePassword: state.user.user_rePassword,
-    check_rePassword: state.user.check_rePassword
+    check_rePassword: state.user.check_rePassword,
+    loading_auth: state.user.loading_auth
   }),
   {
     changeCheckRePassword,
@@ -84,21 +87,25 @@ export default compose(connect(
     }
   }),
   setPropTypes({
-    // email: PropTypes.string.isRequired,
-    // password: PropTypes.string.isRequired,
-    // repassword: PropTypes.string.isRequired,
-    // name: PropTypes.string.isRequired,
-    // signin_error: PropTypes.string,
-    // check_email: PropTypes.bool.isRequired,
-    // check_password: PropTypes.bool.isRequired,
-    // check_repassword: PropTypes.bool.isRequired,
-    // changeEmail: PropTypes.func.isRequired,
-    // changePassword: PropTypes.func.isRequired,
-    // changeRePassword: PropTypes.func.isRequired,
-    // changeName: PropTypes.func.isRequired,
-    // changeCheckEmail: PropTypes.func.isRequired,
-    // changeCheckPassword: PropTypes.func.isRequired,
-    // changeCheckRePassword: PropTypes.func.isRequired,
-    // regUser: PropTypes.func.isRequired
+    curr_user_name: PropTypes.string,
+    user_name: PropTypes.string,
+    user_surname: PropTypes.string,
+    user_password: PropTypes.string,
+    user_rePassword: PropTypes.string,
+    isInSignIn: PropTypes.bool,
+    check_rePassword: PropTypes.bool,
+    loading_auth: PropTypes.bool,
+    changeCheckRePassword: PropTypes.func,
+    changeSurname: PropTypes.func,
+    changePassword: PropTypes.func,
+    changeRePassword: PropTypes.func,
+    changeName: PropTypes.func,
+    regUser: PropTypes.func,
+    changeIsInSignIn: PropTypes.func,
+    loginUser: PropTypes.func,
   }),
+  branch(
+    props => props.loading_auth,
+    renderComponent(Loader)
+  )
 )(Auth)

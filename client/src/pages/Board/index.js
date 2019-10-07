@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose, lifecycle, setPropTypes } from 'recompose';
+import PropTypes from 'prop-types';
+import { branch, compose, lifecycle, renderComponent, setPropTypes } from 'recompose';
 import { makeStyles } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
+import { Fab, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import styled from 'styled-components';
 import List from '../../components/List';
@@ -12,11 +13,13 @@ import {
   createList,
   changeListName,
   deleteList,
-  startCreateCard,
-  changeCardProps,
-  addCard
+  startLoadList,
+  startEditList,
+  editList,
+  changeActiveListId
 } from '../../reducer/List';
 import CreateListWindow from '../../components/CreateListWindow';
+import Loader from '../../components/Loader';
 
 const BoardContainer = styled.div`
   width: 100%;
@@ -32,14 +35,6 @@ const TopBoard = styled.div`
   width: 100%;
   height: 100px;
   align-items: center;
-  border-bottom: 1px solid black;
-`;
-
-const ListBoard = styled.div`
-  margin-top: 50px;
-  display: flex;
-  width: 100%;
-  align-items: flex-start;
 `;
 
 const useStyles = makeStyles(theme => ({
@@ -52,8 +47,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Board = ({
-  boardLists, createListModal, startCreateList, listName, createList, changeListName, deleteList, createCardModal,
-  startCreateCard, changeCardProps, cardName, cardAuthor, addCard, activeListId
+  boardLists, createListModal, startCreateList, listName, createList, changeListName, deleteList, activeListId,
+  curr_user_name, editListModal, startEditList, editList, changeActiveListId
 }) => {
   const classes = useStyles();
 
@@ -65,34 +60,36 @@ const Board = ({
         </Fab>
         <span>Add list</span>
       </TopBoard>
-      <ListBoard>
-        { boardLists.length ?
+      <Grid container style={{ flexGrow: 1 }} spacing={4}>
+        {boardLists.length ?
           (boardLists.map(list => (
-            <List
-              title={list.title}
-              id={list.id}
-              cards={list.cards}
-              key={list.id}
-              deleteList={deleteList}
-              createCardModal={createCardModal}
-              startCreateCard={startCreateCard}
-              changeCardProps={changeCardProps}
-              cardName={cardName}
-              cardAuthor={cardAuthor}
-              addCard={addCard}
-              activeListId={activeListId}
-            />
+            <Grid item key={list._id} xs={12} sm={12} md={6} lg={4}>
+              <List
+                title={list.title}
+                id={list._id}
+                deleteList={deleteList}
+                activeListId={activeListId}
+                startEditList={startEditList}
+                startCreateList={startCreateList}
+                changeActiveListId={changeActiveListId}
+                curr_user_name={curr_user_name}
+              />
+            </Grid>
           )))
           :
           null
         }
-      </ListBoard>
+      </Grid>
       <CreateListWindow
+        activeListId={activeListId}
         createListModal={createListModal}
         startCreateList={startCreateList}
         listName={listName}
         createList={createList}
         changeListName={changeListName}
+        curr_user_name={curr_user_name}
+        editListModal={editListModal}
+        editList={editList}
       />
     </BoardContainer>
   )
@@ -101,22 +98,48 @@ const Board = ({
 export default compose(
   connect(
     state => ({
+      curr_user_name: state.user.curr_user_name,
       boardLists: makeSelectBoard(state),
       createListModal: state.board.createListModal,
       listName: state.board.listName,
-      createCardModal: state.board.createCardModal,
-      cardName: state.board.cardName,
-      cardAuthor: state.board.cardAuthor,
-      activeListId: state.board.activeListId
+      activeListId: state.board.activeListId,
+      editListModal: state.board.editListModal,
+      loading_lists: state.board.loading_lists
     }),
     {
       startCreateList,
       createList,
       changeListName,
       deleteList,
-      startCreateCard,
-      changeCardProps,
-      addCard
+      startLoadList,
+      startEditList,
+      editList,
+      changeActiveListId
     }
+  ),
+  setPropTypes({
+    createCardModal: PropTypes.bool,
+    loading_lists: PropTypes.bool,
+    boardLists: PropTypes.array,
+    curr_user_name: PropTypes.string,
+    editListModal: PropTypes.bool,
+    listName: PropTypes.string,
+    activeListId: PropTypes.string,
+    startCreateList: PropTypes.func,
+    createList: PropTypes.func,
+    deleteList: PropTypes.func,
+    startLoadList: PropTypes.func,
+    startEditList: PropTypes.func,
+    editList: PropTypes.func,
+    changeActiveListId: PropTypes.func
+  }),
+  lifecycle({
+    componentDidMount(){
+      this.props.startLoadList();
+    }
+  }),
+  branch(
+    props => props.loading_lists,
+    renderComponent(Loader)
   )
 )(Board);

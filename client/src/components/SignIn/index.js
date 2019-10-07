@@ -13,7 +13,6 @@ import {
   Container
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {loginUser} from "../../reducer/User";
 
 const useStyles = makeStyles(theme => ({
   '@global': {

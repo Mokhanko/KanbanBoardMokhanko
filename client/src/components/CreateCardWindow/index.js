@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 
 const CreateCardWindow = ({
-  cardName, cardAuthor, createCardModal, startCreateCard, changeCardProps, addCard, listId
+  cardName, curr_user_name, createCardModal, startCreateCard, changeCardProps, addCard, listId
 }) => {
   return (
     <div>
@@ -30,21 +30,12 @@ const CreateCardWindow = ({
             fullWidth
             onChange={e => changeCardProps(e.target.id, e.target.value)}
           />
-          <TextField
-            value={cardAuthor}
-            margin="dense"
-            id="cardAuthor"
-            label="Author name"
-            type="text"
-            fullWidth
-            onChange={e => changeCardProps(e.target.id, e.target.value)}
-          />
         </DialogContent>
         <DialogActions>
           <Button onClick={startCreateCard} color="secondary">
             Cancel
           </Button>
-          <Button color="primary" onClick={() => addCard({ listId, cardName, cardAuthor })}>
+          <Button color="primary" onClick={() => addCard(listId, cardName, curr_user_name)}>
             Create
           </Button>
         </DialogActions>
