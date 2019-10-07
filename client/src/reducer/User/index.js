@@ -8,7 +8,6 @@ const initialState = {
   user_rePassword: '',
   curr_user_name: '',
   curr_user_id: '',
-  curr_user_avatar: '',
   check_rePassword: false,
   loading_auth: false
 };
@@ -26,13 +25,6 @@ export const regUser = createAction('REGISTER_USER',(name, surname, password) =>
   password
 }));
 
-export const userLoggedActions = createAction('USER_LOGGED_ACTIONS',
-(user_name, user_id, user_avatar) => ({
-  user_name,
-  user_id,
-  user_avatar
-}));
-
 export const logOut = createAction('LOG_OUT');
 
 export const changeSurname = createAction('CHANGE_SURNAME', surname => ({ surname }));
@@ -46,16 +38,13 @@ export const changeRePassword = createAction('CHANGE_REPASSWORD', repassword => 
 export const changeCheckRePassword = createAction('CHANGE_CHECK_REPASSWORD', check_rePassword => (
   { check_rePassword }));
 
-export const loadingAuth = createAction('LOADING_AUTH', loading_auth => ({ loading_auth }));
+export const loadingAuth = createAction('LOADING_AUTH', value => ({ value }));
 
 export const changeCurrUserName = createAction('CHANGE_SHOWNAME', curr_user_name => (
   { curr_user_name }));
 
 export const changeCurrUserId = createAction('CHANGE_CURRUSERID', curr_user_id => (
   { curr_user_id }));
-
-export const changeCurrUserAvatar = createAction('CHANGE_CURRUSER_AVATAR', curr_user_avatar => (
-  { curr_user_avatar }));
 
 export default handleActions({
     [changeIsInSignIn]: state => ({
@@ -82,9 +71,9 @@ export default handleActions({
       ...state,
       check_rePassword: payload.check_rePassword
     }),
-    [loadingAuth]: state => ({
+    [loadingAuth]: (state, { payload }) => ({
       ...state,
-      loadingAuth: !state.loadingAuth
+      loadingAuth: payload.value
     }),
     [changeCurrUserName]: (state, { payload }) => ({
       ...state,
@@ -93,10 +82,6 @@ export default handleActions({
     [changeCurrUserId]: (state, { payload }) => ({
       ...state,
       curr_user_id: payload.curr_user_id
-    }),
-    [changeCurrUserAvatar]: (state, { payload }) => ({
-      ...state,
-      curr_user_avatar: payload.curr_user_avatar
     })
   },
   initialState

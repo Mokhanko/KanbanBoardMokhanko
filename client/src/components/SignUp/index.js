@@ -10,9 +10,7 @@ import {
   Typography
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-
 import Container from '@material-ui/core/Container';
-import {changeIsInSignIn, regUser} from "../../reducer/User";
 
 
 const useStyles = makeStyles(theme => ({

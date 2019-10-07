@@ -10,7 +10,8 @@ import {
 } from '@material-ui/core';
 
 const CreateListWindow = ({
- createListModal, startCreateList, listName, createList, changeListName
+ createListModal, startCreateList, listName, createList, changeListName, curr_user_name, editListModal, activeListId,
+ editList
 }) => {
 
   return (
@@ -18,9 +19,15 @@ const CreateListWindow = ({
       <Dialog open={createListModal} onClose={startCreateList} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            To create a new list, please enter a name
-          </DialogContentText>
+          { editListModal ?
+           ( <DialogContentText>
+              Edit list Title only
+            </DialogContentText>)
+            :
+           ( <DialogContentText>
+              To create a new list, please enter a name
+            </DialogContentText>)
+          }
           <TextField
             autoFocus
             value={listName}
@@ -36,9 +43,15 @@ const CreateListWindow = ({
           <Button onClick={startCreateList} color="secondary">
             Cancel
           </Button>
-          <Button color="primary" onClick={() => createList(listName)}>
-            Create
-          </Button>
+          { editListModal ?
+            <Button color="primary" onClick={() => editList(activeListId, listName)}>
+              Save
+            </Button>
+            :
+            <Button color="primary" onClick={() => createList(listName, curr_user_name)}>
+              Create
+            </Button>
+          }
         </DialogActions>
       </Dialog>
     </div>

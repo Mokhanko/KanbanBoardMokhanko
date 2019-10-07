@@ -18,10 +18,9 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -79,7 +78,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Header = ({ history }) => {
+const Header = ({ logOut }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -110,8 +109,7 @@ const Header = ({ history }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap onClick={() => {
-            history.push('/auth')}}>
+          <Typography variant="h6" noWrap>
             Board
           </Typography>
         </Toolbar>
@@ -132,22 +130,12 @@ const Header = ({ history }) => {
         </div>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
+            <ListItem button onClick={()=>logOut()}>
+              <ListItemIcon><ExitToAppIcon/></ListItemIcon>
+              <ListItemText primary='LogOut' />
             </ListItem>
-          ))}
         </List>
         <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
       </Drawer>
     </div>
   )

@@ -5,8 +5,10 @@ import logger from 'redux-logger';
 import {createBrowserHistory} from 'history';
 import boardReducer from '../reducer/List';
 import userReducer from '../reducer/User';
+import cardReducer from '../reducer/Card';
 import { boardSagas } from '../reducer/List/sagas';
-import { userSaga } from '../reducer/User/sagas'
+import { userSaga } from '../reducer/User/sagas';
+import { cardSagas } from '../reducer/Card/sagas';
 
 export const history = new createBrowserHistory();
 
@@ -20,13 +22,15 @@ const middlewares = [sagaMiddleware];
 
 const rootReducer = combineReducers({
   board: boardReducer,
-  user: userReducer
+  user: userReducer,
+  card: cardReducer
 });
 
 function* rootSaga(){
   yield all([
     fork(boardSagas),
-    fork(userSaga)
+    fork(userSaga),
+    fork(cardSagas)
   ])
 }
 
